@@ -1,0 +1,63 @@
+[tool.poetry]
+name = "the-message-integration-process"
+version = "0.1.0"
+description = "Download messages from mail"
+authors = ["Aleksandr Rol <rolaleksandr75@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "4.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.8.0"
+isort = "^5.13.2"
+flake8 = "^7.1.1"
+mypy = "^1.11.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.flake8]
+ignore = [
+    "W503",
+    "F811",
+    "ANN101",
+    "ANN102",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+    "W503",
+]
+exclude = [
+    "tests/",
+    "*/migrations/",
+    ".venv/",
+    "*/.venv/",
+    "env/",
+    "*/env/",
+]
+per-file-ignores = "*/settings.py:E501"
+max-complexity = 10
+max-line-length = 79
+
+[tool.isort]
+profile = "black"
+skip = ["manage.py", "settings.py", "migrations"]
+
+[tool.black]
+exclude = '''(
+    /migrations/
+    |/static/
+    |/media/
+    |^manage\.py$
+    |^settings\.py$
+)'''
+line-length = 79
+skip-string-normalization = true
