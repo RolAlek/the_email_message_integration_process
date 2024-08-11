@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:15
+    env_file: .env
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
