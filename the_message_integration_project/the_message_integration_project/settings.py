@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_bootstrap5",
+    "channels",
     "emails.apps.EmailsConfig",
 ]
 
@@ -74,6 +75,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "the_message_integration_project.wsgi.application"
+ASGI_APPLICATION = "the_message_integration_project.asgi.application"
 
 
 # Database
