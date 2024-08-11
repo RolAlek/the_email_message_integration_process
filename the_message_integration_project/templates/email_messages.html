@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+{% block content %}
+  <h1>Emails</h1>
+  <progress id="progress-bar" max="100" value="0"></progress>
+  <p id="progress-text">Reading messages</p>
+  <table id="email-table" border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Тема</th>
+            <th>Дата отправки</th>
+            <th>Дата получения</th>
+            <th>Описание</th>
+            <th>Прикрепленные файлы</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+{% endblock content %}

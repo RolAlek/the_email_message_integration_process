@@ -10,6 +10,7 @@ python = "^3.12"
 django = "4.2"
 psycopg2-binary = "^2.9.9"
 django-bootstrap5 = "^24.2"
+channels = "^4.1.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
