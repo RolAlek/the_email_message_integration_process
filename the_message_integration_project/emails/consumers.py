@@ -3,15 +3,28 @@ import imaplib
 import json
 
 from channels.generic.websocket import WebsocketConsumer
+from django.shortcuts import get_object_or_404
 
 from .models import EmailAccount, EmailMessage
-from .utils import get_last_email, fetch_attachment
+from .utils import fetch_attachment, get_last_email
 
 
 class EmailConsumer(WebsocketConsumer):
 
     def connect(self):
         self.accept()
+
+    def receive(self, text_data=None):
+        data = json.loads(text_data)
+        account_id = data.get('account_id')
+
+        if account_id:
+            self.fetch_emails(get_object_or_404(EmailAccount, account_id))
+        else:
+            self.send(text_data=json.dumps(
+                    {'error': 'Аккаунт с таким id не найден.'}
+                )
+            )
 
     def fetch_emails(self, email_account: EmailAccount):
         imap = imaplib.IMAP4_SSL(email_account.get_imap_server)
@@ -24,9 +37,13 @@ class EmailConsumer(WebsocketConsumer):
         last_message = get_last_email(email_account)
         last_message_date = last_message.send_date if last_message else None
 
-        for message_id in email_ids:
+        total_emails = len(email_ids)
+
+        for index, message_id in enumerate(email_ids):
             _, msg_data = imap.fetch(message_id, '(RFC822)')
             msg = email.message_from_bytes(msg_data[0][1])
+
+            self.send_progress(index + 1, total_emails)
 
             if last_message_date and msg['Date'] <= last_message_date:
                 continue
@@ -63,6 +80,8 @@ class EmailConsumer(WebsocketConsumer):
             for attachment in attachments:
                 attachment.message = email_message
                 attachment.save()
+            
+            self.send_new_email(email_message)
 
         imap.close()
         imap.logout()
