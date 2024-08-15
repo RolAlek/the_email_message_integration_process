@@ -1,6 +1,4 @@
-const accountId = "{{ account_id }}"
-
-const socket = new WebSocket('ws://localhost:8000/ws/emails/');
+const socket = new WebSocket('ws://localhost:8000/ws/emails/${emailAccountId}/');
 
 socket.onmessage = function(event) {
     const data = JSON.parse(event.data);

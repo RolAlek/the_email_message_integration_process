@@ -4,12 +4,12 @@ from django.db import models
 class EmailAccount(models.Model):
     PROVIDERS = [
         ('gmail.com', 'Gmail'),
-        ('yandex.ro', 'Yandex'),
+        ('yandex.ru', 'Yandex'),
         ('mail.ru', 'Mail.ru'),
     ]
     IMAP_SERVERS = {
         'gmail.com': 'imap.gmail.com',
-        'yandex.ru': 'imap.yandex.com',
+        'yandex.ru': 'imap.yandex.ru',
         'mail.ru': 'imap.mail.ru',
     }
     provider = models.CharField(verbose_name='Провайдер', choices=PROVIDERS)

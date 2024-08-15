@@ -3,8 +3,10 @@
 {% load static %}
 {% block content %}
   <h1 class="mb-4 text-center">Письма</h1>
-  <progress id="progress-bar" max="100" value="0"></progress>
-  <p id="progress-text">Reading messages</p>
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+  </div>
+  <p id="progress-text">Чтение сообщений</p>
   <table class="table table-bordered table-hover" id="email-table" border="1">
     <thead class="thead-dark">
         <tr>
@@ -12,11 +14,36 @@
             <th scope="col">Тема</th>
             <th scope="col">Дата отправки</th>
             <th scope="col">Дата получения</th>
-            <th scope="col">Описание</th>
-            <th scope="col">Прикрепленные файлы</th>
+            <th scope="col">Описание/Текст</th>
+            <th scope="col">Вложения</th>
         </tr>
     </thead>
     <tbody></tbody>
   </table>
-  <script src="{% static 'js/email_script.js' %}"></script>
+  <script>
+    const emailAccountId = {{ email_account_id }};
+    const socket = new WebSocket(`ws://localhost:8000/ws/emails/${emailAccountId}/`);
+
+    socket.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+
+      if (data.progress) {
+        document.getElementById('progress-text').innerText = data.progress;
+        document.querySelector('.progress-bar').style.width = data.percentage + '%';
+        document.querySelector('.progress-bar').setAttribute('aria-valuenow', data.percentage);
+        document.querySelector('.progress-bar').innerText = data.percentage + '%';
+      }
+
+      if (data.new_email) {
+        const table = document.getElementById('email-table').getElementsByTagName('tbody')[0];
+        const row = table.insertRow();
+
+        row.insertCell(0).innerText = data.new_email.message_id;
+        row.insertCell(1).innerText = data.new_email.subject;
+        row.insertCell(2).innerText = data.new_email.send_date;
+        row.insertCell(3).innerText = data.new_email.receive_date;
+        row.insertCell(4).innerText = data.new_email.text + '...';
+      }
+  }
+  </script>
 {% endblock content %}
