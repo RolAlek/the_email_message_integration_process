@@ -5,8 +5,24 @@ services:
     image: postgres:15
     env_file: .env
     restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "django_user", "-d", "mail_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 5432:5432
     volumes:
       - pg_data:/var/lib/postgresql/data
+  
+  web:
+    build: ./
+    ports:
+      - 8000:8000
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   pg_data:

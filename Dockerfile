@@ -9,6 +9,10 @@ RUN poetry config virtualenvs.create false
 
 RUN poetry install --no-dev
 
-COPY the_message_integration_project/ .
+COPY . .
 
-CMD ["python", "the_message_integration_project/manage.py", "runserver", "0.0.0.0:8000"]
+COPY entrypoint.sh ./
+
+RUN chmod +x ./entrypoint.sh
+
+CMD ["./entrypoint.sh"]
