@@ -1,7 +1,3 @@
-from typing import Any
-from django.forms import BaseModelForm
-from django.http import HttpResponse
-from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
@@ -15,17 +11,20 @@ class EmailAccountCreateView(CreateView):
     form_class = EmailAccountForm
     template_name = 'add_email.html'
 
-    def get_success_url(self) -> str:
-        return reverse(
-            'emails:messages',
-            kwargs={'email_account_id': self.object.id},
-        )
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self.request.session['email_account_id'] = self.object.id
+        return response
+
+    def get_success_url(self):
+        return reverse('emails:messages')
 
 class EmailMessagesView(TemplateView):
     template_name = 'email_messages.html'
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['email_account_id'] = self.kwargs['email_account_id']
+        email_account_id = self.request.session.get('email_account_id')
+        context['email_account_id'] = email_account_id
         return context

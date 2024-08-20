@@ -5,16 +5,17 @@
       {% with request.resolver_math.view_name as view_name %}
         <ul class="nav nav-pills">
         {% if user.is_authenticated %}
-            <li class="nav-item">
-              <a class="nav-link {% if view_name == 'emails:add_email' %}active{% endif %}"
-                 href="{% url 'emails:add_email' %}">
-                 Добавить почту
-              </a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link {% if view_name == 'emails:add_email' %}active{% endif %}"
+               href="{% url 'emails:add_email' %}">
+               Добавить почту
+            </a>
+          </li>
+          {% if email_account_id %}
             <li class="nav-item">
               <a class="nav-link {% if view_name == 'emails:messages' %}active{% endif %}"
-                 href="{% url 'emails:messages' %}">
-                 Письма
+                href="{% url 'emails:messages' %}">
+                Письма
               </a>
             </li>
             <li class="nav-item">
@@ -23,6 +24,7 @@
                 <button type="submit" class="btn btn-primary">Выйти</button>
               </form>
             </li>
+          {% endif %}
         {% else %}
           <li class="nav-item">
             <a class="nav-link {% if view_name == 'login' %}active{% endif %}"

@@ -7,7 +7,7 @@ app_name = 'emails'
 urlpatterns = [
     path('', EmailAccountCreateView.as_view(), name='add_email'),
     path(
-        'messages/<int:email_account_id>/',
+        'messages/',
         EmailMessagesView.as_view(),
         name='messages',
     ),

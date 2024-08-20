@@ -1,4 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.db import models
+
+User = get_user_model()
 
 
 class EmailAccount(models.Model):
@@ -12,6 +15,12 @@ class EmailAccount(models.Model):
         'yandex.ru': 'imap.yandex.ru',
         'mail.ru': 'imap.mail.ru',
     }
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='email_accounts',
+        null=True,
+    )
     provider = models.CharField(verbose_name='Провайдер', choices=PROVIDERS)
     email = models.EmailField(verbose_name='Почта', unique=True)
     password = models.CharField(verbose_name='Пароль', max_length=128)
